@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2048</title>
+</head>
+<script type="application/javascript" src="../js/down.js"></script>
+<script type="application/javascript" src="../js/left.js"></script>
+<script type="application/javascript" src="../js/right.js"></script>
+<script type="application/javascript" src="../js/up.js"></script>
+<style>
+    .container {
+        height: 600px;
+        width: 100%;
+        background: azure;
+        margin-left: auto;
+        margin-right: auto;
+        padding-top: 100px;
+    }
+
+    .conner {
+        background: khaki;
+        width: 400px;
+        height: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .inner {
+        background: #8eeaea;
+        width: 84px;
+        height: 84px;
+        text-align: center;
+        border: 8px solid #f7eedd;
+        float: left;
+    }
+
+    .button_line{
+        display: flex;
+    }
+
+    .button{
+        margin-top: 20px;
+        background: bisque;
+        width: 200px;
+        height: 80px;
+        font-size: 30px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+<body>
+<div class="container" id="container">
+    <div class="conner" id="conner"></div>
+    <div class="conner_2">
+        <div class="button_line">
+            <button class="button" onclick="init()">重新开始</button>
+        </div>
+    </div>
+</div>
+<script>
+    document.onkeydown = keyDown;
+    window.onload = init();
+
+    function keyDown() {
+        if (event.keyCode == 37) {  // 左
+            left();
+            generateNew();
+        }
+        if (event.keyCode == 38) { // 上
+            up();
+            generateNew();
+        }
+        if (event.keyCode == 39) { // 右
+            right();
+            generateNew();
+        }
+        if (event.keyCode == 40) { // 下
+            down();
+            generateNew();
+        }
+    }
+
+    function changeContent(a, b) {
+        temp0 = a.innerHTML;
+        a.innerHTML = b.innerHTML;
+        b.innerHTML = '';
+    }
+
+    function add(a, b) {
+        if (a.innerHTML == b.innerHTML) {
+            a.innerHTML = String(parseInt(a.innerHTML) * 2);
+            b.innerHTML = '';
+        }
+    }
+
+    function init() {
+        var template = '<div class="inner"><h1><b><span class="digit" id="##id##"></span></b></h1></div>';
+        var connerHtml = '';
+        for (var first = 1; first <= 16; first++) {
+            var template_in = template.replace("##id##", String(first));
+            connerHtml += template_in;
+        }
+        document.getElementById("conner").innerHTML = connerHtml;
+
+        var num1 = Math.ceil(Math.random() * 16);
+        var num2 = Math.ceil(Math.random() * 16);
+        var num3 = Math.ceil(Math.random() * 16);
+        if (num1 != num2 && num2 != num3 && num1 != num3) {
+            document.getElementById(String(num1)).innerHTML = 2;
+            document.getElementById(String(num2)).innerHTML = 4;
+            document.getElementById(String(num3)).innerHTML = 2;
+        } else {
+            init();
+        }
+    }
+
+    function generateNew() {
+        var allEmpty = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        var index = 0;
+        for (var m = 1; m <= 16; m++) {
+            if (document.getElementById(String(m)).innerHTML == '') {
+                allEmpty[index] = m;
+                index++;
+            }
+        }
+
+        allEmpty = allEmpty.filter(function (item) {
+            return item != 0;
+        });
+
+        console.log(allEmpty);
+
+        addNew(allEmpty);
+    }
+
+    function addNew(allEmpty) {
+        var num3 = Math.ceil(Math.random() * 2) * 2;
+        var num4 = Math.ceil(Math.random() * 2) * 2;
+
+        if (allEmpty.length > 1) {
+            var num5 = Math.ceil(Math.random() * allEmpty.length);
+            var num6 = Math.ceil(Math.random() * allEmpty.length);
+
+            if (num5 != num6) {
+                try {
+                    document.getElementById(String(allEmpty[num5])).innerHTML = num3;
+                    document.getElementById(String(allEmpty[num6])).innerHTML = num4;
+                } catch (err) {
+                    console.log(num6);
+                }
+            }
+        } else if (allEmpty.length == 1) {
+            document.getElementById(String(allEmpty[0])).innerHTML = num3;
+        } else {
+            alert("Game Over");
+            init();
+        }
+
+    }
+</script>
+</body>
+</html>
